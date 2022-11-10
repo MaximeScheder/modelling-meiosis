@@ -3,10 +3,6 @@
 Here are present the landscape for the euler simulations.
 """
 
-#I am adding this stuff to understand github !!!
-
-#This appaer only on code-cleaning
-
 #--------- LYBRARIES
 
 import torch
