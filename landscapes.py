@@ -3,6 +3,8 @@
 Here are present the landscape for the euler simulations.
 """
 
+#I am adding this stuff to understand github !!!
+
 #--------- LYBRARIES
 
 import torch
@@ -14,8 +16,6 @@ def cuspX_V(x, y, p):
     if p.ndim == 1:
         p = p.reshape(1, -1)
     return x**4 - 1*x**2/2 + p[:,0]*x + y**2/2
-
-
     
 def cuspX_F(a, b, x, y):
     return -torch.stack([4*x**3 + a*2*x + b, 4*y])
