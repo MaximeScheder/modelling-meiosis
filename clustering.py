@@ -7,9 +7,8 @@ This code is used in order to cluster data into different states
 @author: msche
 """
 
-import numpy as np
 import torch
-from autograd.scipy.stats import multivariate_normal as mn
+#from autograd.scipy.stats import multivariate_normal as mn
 import projections
 
 
@@ -42,7 +41,6 @@ def GMM_EM(centers_init, centers, sigmas, weights, obs, q = None,
     iteration = 0
     
     N = obs.shape[0]
-    dim = obs.shape[1]
     k = weights.shape[0]
     
     while epsilon > tolerance and iteration < Niter:

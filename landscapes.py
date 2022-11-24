@@ -7,6 +7,7 @@ Here are present the landscape for the euler simulations.
 
 import torch
 import matplotlib.pyplot as plt
+import numpy as np
 
 #--------- LANDSCAPES
 
@@ -36,17 +37,10 @@ def binaryFlip_F(a, b, x, y):
     f2 = 4*y**3 -0.5*2*x*y + b
     return -0.71*torch.stack([f1+f2,-f1+f2])
 
-# def cusp(x, y, parameter):
-#     p = parameter
-#     if p.ndim == 1:
-#         p = p.reshape(1, -1)
-#     return -torch.stack([4*x**3 -2*x + p[:,0], 4*y**3])
-
+# This is the format to be used for landscape format
 def cusp(x, y, parameter):
-    p = parameter
-    if p.ndim == 1:
-        p = p.reshape(1, -1)
-    return -torch.stack([4*x**3 - 2*x/2 + p[:,0], y])
+    p = parameter    
+    return -torch.stack([4*x**3 - 2*x/2*p[:,:,1] + p[:,:,0], y], dim=1)
 
 def cuspy(x, y, p):
     if p.ndim == 1:
@@ -63,6 +57,12 @@ def flip(x, y, p):
     if p.ndim == 1:
         p = p.reshape(1, -1)
     return -torch.stack([x, y**2 + p[:,0]])
+
+def cusp_full(x, y, p):
+    " p : velocity, a, b"
+    if p.ndim == 1:
+        p = p.reshape(1, -1)
+    return p[:,:,2][:,np.newaxis,:]*cusp(x, y, p[:,:,0:2])
 
 def fate_seperate(x, y, p):
     if p.ndim == 1:
@@ -95,9 +95,6 @@ def simplified_fate(x, y, parameters):
     if parameters.ndim == 1:
         parameters = parameters.reshape(1, -1)
     return parameters[:,2]*glueCusp(x)*cusp(x+0.7, y, parameters[:,0]) + parameters[:,3]*(1-glueCusp(x))*cusp(x-0.7,y,parameters[:,1])
-    
-def simplified_fate_V(x, y, parameters):
-    return parameters[:,2]*glueCusp(x)*cuspX_V(x+0.7, y, parameters[:,0]) + parameters[:,3]*(1-glueCusp(x))*cuspX_V(x-0.7,y,parameters[:,1])
     
 
 def glueCycle(x, y):

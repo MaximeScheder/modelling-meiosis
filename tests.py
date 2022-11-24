@@ -59,6 +59,7 @@ def test_landscape_2():
     ax_2d.tick_params(axis='both', which='major', labelsize=50)
     plt.savefig("./fig/simplified_landscape_2.png", dpi=200)
     
+    
 
 
     
