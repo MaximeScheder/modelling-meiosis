@@ -16,14 +16,16 @@ Take home message :
 
 import numpy as np
 import torch
-import multiprocessing as mp
+import torch.multiprocessing as mp
 import simulation
 import time
 import clustering
 from scipy.stats import multivariate_normal
 from pynvml import nvmlInit, nvmlDeviceGetHandleByIndex, nvmlDeviceGetMemoryInfo
-
-
+from concurrent.futures import ProcessPoolExecutor
+import subprocess
+import os
+from gmm import GaussianMixture
 
 def cusp_gpu(x, y, parameter):
     p = parameter
@@ -212,10 +214,11 @@ def euler_gpu(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions, nbatch):
             
     return Xem
 
-def euler_GPU_2(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions, nbatch):
+def euler_GPU_2(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions):
     
     Ncells = X0.shape[1]
     dim_param = parameters.shape[-1]
+    nbatch = parameters.shape[0]
     
     dt = torch.tensor(dt)
     mean = torch.tensor([0.0])
@@ -262,6 +265,9 @@ def euler_GPU_2(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions, nbatch
         
         #list of steps at which to save the results 
         if i+1 in steps:
+            print('Arrived at step {}'.format(k), flush=True)
+            T = time.localtime()
+            print('\t time : {}:{}:{}'.format(T.tm_hour, T.tm_min, T.tm_sec))
             Xem[:,:,:,k-1,:] = Xtemp[:,:,1,:].reshape(nbatch, Nconditions, Ncells, 2).cpu()
             k += 1
            
@@ -297,7 +303,8 @@ def run_cpu():
     centers = torch.Tensor([[0, 0.3], # for the fate_seperate,
                             [0.4, 0]])
     
-    ncpu = 20#mp.cpu_count()
+    ncpu = 8 #mp.cpu_count()
+    nbatch = 20
     parameters = np.ones((ncpu, 5))
     parameters[:,-1] *= 0.01
     
@@ -346,7 +353,7 @@ def run_gpu():
     dt = 0.01
     dim_param = 1 # without account of sigma
     Nstate = 2 # regular, MII
-    time_point = np.array([11, 14, 17, 20, 23, 37, 111])
+    time_point = np.array([11, 14, 17, 20, 23])#, 37, 111])
     steps = time_point/dt
     Nsteps = int(steps[-1])
     Nmeasure = len(time_point)
@@ -374,14 +381,45 @@ def run_gpu():
     
     X0 = torch.tensor(X0)
     
-    X = euler_GPU_2(X0, sigmas, F_lscpe, lands_param, dt, Nsteps, steps, Nconditions, ncpu)
+    X = euler_GPU_2(X0, sigmas, F_lscpe, lands_param, dt, Nsteps, steps, Nconditions)
         
     X = X.reshape(ncpu*Nconditions*Ncells*Nmeasure, 2)
+    
+    gm = GaussianMixture(2, 2).cuda()
+    gm.fit(X.cuda())
+    
+    # for i in range(ncpu):
+    #     assignement = clustering.KMeans_Clustering(X[i,:,:,:].view(Nconditions*Ncells*Nmeasure,2).cuda(), centers.cuda())
+        #assignement = assignement.reshape(ncpu, Nconditions, Ncells, Nmeasure)
+        #assignement = assignement.cpu()
+        #assignement = assignement.numpy()
+    
+    end = time.perf_counter()
+    
+    print('time elapsed GPU: {:.2f}'.format(end-start))
+    
+    
+def run_gpu_parallel():
+    
+    n_process = 10
+    nbatch = 100
+    start = time.perf_counter() 
+    parameters = torch.ones((nbatch, 5)).double()
+    
+    batch_param = torch.split(parameters, nbatch//n_process)
+    
+    processes = []
+    for i in range(n_process):
+        name = './tensors/param-b{}'.format(i)
+        torch.save(batch_param[i], name)
+        f = open('file_{}.txt'.format(i), 'w')
+        p = subprocess.Popen(['python', 'run_simulation_gpu.py', name], stdout=f)
+        processes.append((p,f))
         
-    assignement = clustering.KMeans_Clustering(X.cuda(), centers.cuda())
-    assignement = assignement.reshape(ncpu, Nconditions, Ncells, Nmeasure)
-    assignement = assignement.cpu()
-    assignement = assignement.numpy()
+    for p, f in processes:
+        p.wait()
+        f.close()
+        
     
     end = time.perf_counter()
     
@@ -473,6 +511,7 @@ if __name__ == '__main__':
 
     # run_cpu()
     run_gpu()
+    #run_gpu_parallel()
     
     #Cov_matrix_computation()
 

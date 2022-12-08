@@ -1,17 +1,29 @@
 STARTING SIMULATION 
 
-Total samples    : 300
+|##############|
+| Ground Truth |
+|##############|
+
+ -Conditions are : 
+['(HHH)' '(HHL)' '(HH_)' '(HLH)' '(HLL)' '(HL_)' '(HMM)' '(HM_)' '(H_H)'
+ '(H_L)' '(H_M)' '(H__)' '(LHH)' '(LHL)' '(LH_)' '(LLH)' '(LLL)' '(LL_)'
+ '(LMM)' '(LM_)' '(L_H)' '(L_L)' '(L_M)' '(L__)' '(___)']
+ -Time points are : 
+	[ 0 11 14 17 20 23]
+ -Number of states : 2
+
+Total samples    : 500
 Simulated cells  : 300
-Total conditions : 24
+Total conditions : 25
 
 |##################|
 | Starting ABC-SMC |
 |##################|
 
 Epoch 0
-Eps 29 
+Eps 49 
 
-Actual number of particles 0
+Number of particles 0 - Total iteration 1
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -21,51 +33,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.44680729999982 seconds
+	 -- time elapsed for euler step : 43.4533519 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.701249800000369 seconds
-
- - 1 particles accepted
-	 - Distances : [26.89333333]
- - 1 / 300 particles found 
-
-Actual number of particles 1
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.27140729999974 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.754448899999261 seconds
-
- - 1 particles accepted
-	 - Distances : [26.57333333]
- - 2 / 300 particles found 
-
-Actual number of particles 2
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.15207149999969 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.727601699999468 seconds
+	 -- time elapsed for clustering : 0.9671390999999971 seconds
+ - Average distance : 123.07433466256067 +/- 61.24945016629229
 
  - 2 particles accepted
-	 - Distances : [20.66       25.00666667]
- - 4 / 300 particles found 
+	 - Distances : [46.67539021 47.71362766]
+ - 2 / 500 particles found 
 
-Actual number of particles 4
+Number of particles 2 - Total iteration 2
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -75,359 +52,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.51071899999988 seconds
+	 -- time elapsed for euler step : 42.393004600000005 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.732239099999788 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19538029999967 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.759991200000513 seconds
-
- - 1 particles accepted
-	 - Distances : [23.39333333]
- - 5 / 300 particles found 
-
-Actual number of particles 5
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.45853469999929 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.807832499999677 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.32480610000039 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.784665500001211 seconds
-
- - 1 particles accepted
-	 - Distances : [28.83333333]
- - 6 / 300 particles found 
-
-Actual number of particles 6
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19584459999896 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.8309988000000885 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.49581150000085 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.81813449999936 seconds
-
- - 2 particles accepted
-	 - Distances : [28.80666667 26.74666667]
- - 8 / 300 particles found 
-
-Actual number of particles 8
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.54702429999998 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.82026550000046 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.26759979999952 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.873074600000109 seconds
-
- - 1 particles accepted
-	 - Distances : [27.21333333]
- - 9 / 300 particles found 
-
-Actual number of particles 9
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.40989780000018 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.9089798999993945 seconds
-
- - 1 particles accepted
-	 - Distances : [28.96]
- - 10 / 300 particles found 
-
-Actual number of particles 10
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.71420860000035 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.828089799999361 seconds
-
- - 1 particles accepted
-	 - Distances : [20.68666667]
- - 11 / 300 particles found 
-
-Actual number of particles 11
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.61134309999943 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.851644399999714 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.28860720000011 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.92515850000018 seconds
-
- - 2 particles accepted
-	 - Distances : [26.08666667 27.32      ]
- - 13 / 300 particles found 
-
-Actual number of particles 13
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.03934130000016 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.871174099998825 seconds
-
- - 1 particles accepted
-	 - Distances : [27.96]
- - 14 / 300 particles found 
-
-Actual number of particles 14
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.42403209999975 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.873828100000537 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.90352530000018 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.8816227999996045 seconds
-
- - 1 particles accepted
-	 - Distances : [17.47333333]
- - 15 / 300 particles found 
-
-Actual number of particles 15
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.2217970999991 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.882714299999861 seconds
-
- - 2 particles accepted
-	 - Distances : [26.72       28.73333333]
- - 17 / 300 particles found 
-
-Actual number of particles 17
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.42311879999943 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.912080800000695 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.05645249999907 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.865225800000189 seconds
-
- - 1 particles accepted
-	 - Distances : [27.41333333]
- - 18 / 300 particles found 
-
-Actual number of particles 18
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.67439899999954 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.85745180000049 seconds
-
- - 1 particles accepted
-	 - Distances : [26.74]
- - 19 / 300 particles found 
-
-Actual number of particles 19
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.86655679999967 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.886304999999993 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.20643089999976 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.853020500000639 seconds
+	 -- time elapsed for clustering : 0.7654495000000026 seconds
+ - Average distance : 121.05310563549466 +/- 61.50793098268383
 
  - 3 particles accepted
-	 - Distances : [28.58       26.52666667 27.13333333]
- - 22 / 300 particles found 
+	 - Distances : [43.9098705  47.16847476 47.03157878]
+ - 5 / 500 particles found 
 
-Actual number of particles 22
+Number of particles 5 - Total iteration 3
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -437,13 +71,90 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.27022119999856 seconds
+	 -- time elapsed for euler step : 42.093515499999995 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.86585980000018 seconds
+	 -- time elapsed for clustering : 0.8171347000000253 seconds
+ - Average distance : 116.80135062855669 +/- 62.21227766659615
+
+ - 1 particles accepted
+	 - Distances : [47.916741]
+ - 6 / 500 particles found 
+
+Number of particles 6 - Total iteration 4
+________________________________________________________________ 
+
+ - Sampling 1000 new particles
+	____________________
+	####################
+
+ - Simulating the system :
+	 Loading and preparing simulation parameters
+	 Starting stochastic euler evolution
+	 -- time elapsed for euler step : 42.232196200000004 seconds
+	 Starting Clustering
+	 -- time elapsed for clustering : 0.7581347999999934 seconds
+ - Average distance : 114.22824352783134 +/- 61.31252558495863
+
+ - 4 particles accepted
+	 - Distances : [44.95628768 47.43258629 47.04833858 46.05068522]
+ - 10 / 500 particles found 
+
+Number of particles 10 - Total iteration 5
+________________________________________________________________ 
+
+ - Sampling 1000 new particles
+	____________________
+	####################
+
+ - Simulating the system :
+	 Loading and preparing simulation parameters
+	 Starting stochastic euler evolution
+	 -- time elapsed for euler step : 41.93215889999999 seconds
+	 Starting Clustering
+	 -- time elapsed for clustering : 0.7440093000000161 seconds
+ - Average distance : 121.43820297087734 +/- 61.07092727891013
+
+ - 2 particles accepted
+	 - Distances : [46.5296163  46.15056777]
+ - 12 / 500 particles found 
+
+Number of particles 12 - Total iteration 6
+________________________________________________________________ 
+
+ - Sampling 1000 new particles
+	____________________
+	####################
+
+ - Simulating the system :
+	 Loading and preparing simulation parameters
+	 Starting stochastic euler evolution
+	 -- time elapsed for euler step : 42.29917779999997 seconds
+	 Starting Clustering
+	 -- time elapsed for clustering : 0.7490624000000139 seconds
+ - Average distance : 116.93310816154067 +/- 61.93942637840015
+
+ - 2 particles accepted
+	 - Distances : [46.92464074 48.91025023]
+ - 14 / 500 particles found 
+
+Number of particles 14 - Total iteration 7
+________________________________________________________________ 
+
+ - Sampling 1000 new particles
+	____________________
+	####################
+
+ - Simulating the system :
+	 Loading and preparing simulation parameters
+	 Starting stochastic euler evolution
+	 -- time elapsed for euler step : 41.92967590000001 seconds
+	 Starting Clustering
+	 -- time elapsed for clustering : 0.7528867999999989 seconds
+ - Average distance : 119.92495686736734 +/- 61.418799759542445
 
  - 0 particles accepted
 
-Iteration 2
+Number of iteration 2 - Total iteration 8
 __________________ 
 
  - Sampling 1000 new particles
@@ -453,33 +164,16 @@ __________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.20470700000078 seconds
+	 -- time elapsed for euler step : 42.055640100000005 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.88574619999963 seconds
-
- - 1 particles accepted
-	 - Distances : [26.50666667]
- - 23 / 300 particles found 
-
-Actual number of particles 23
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.60891420000007 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.7986142999998265 seconds
+	 -- time elapsed for clustering : 0.7510169999999903 seconds
+ - Average distance : 119.61970106219201 +/- 60.6755957482897
 
  - 3 particles accepted
-	 - Distances : [25.26666667 26.08666667 28.27333333]
- - 26 / 300 particles found 
+	 - Distances : [47.90172989 46.03807484 47.06956443]
+ - 17 / 500 particles found 
 
-Actual number of particles 26
+Number of particles 17 - Total iteration 9
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -489,15 +183,35 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.18916580000041 seconds
+	 -- time elapsed for euler step : 42.005395899999996 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.877636600000187 seconds
+	 -- time elapsed for clustering : 0.7492602000000375 seconds
+ - Average distance : 116.83213529585736 +/- 61.72085886002235
+
+ - 4 particles accepted
+	 - Distances : [47.32140777 42.62641453 48.27658458 48.76329601]
+ - 21 / 500 particles found 
+
+Number of particles 21 - Total iteration 10
+________________________________________________________________ 
+
+ - Sampling 1000 new particles
+	____________________
+	####################
+
+ - Simulating the system :
+	 Loading and preparing simulation parameters
+	 Starting stochastic euler evolution
+	 -- time elapsed for euler step : 41.94593310000005 seconds
+	 Starting Clustering
+	 -- time elapsed for clustering : 0.7446840999999722 seconds
+ - Average distance : 118.85563197895401 +/- 61.39440703944224
 
  - 2 particles accepted
-	 - Distances : [28.6        28.03333333]
- - 28 / 300 particles found 
+	 - Distances : [43.22577886 46.08163681]
+ - 23 / 500 particles found 
 
-Actual number of particles 28
+Number of particles 23 - Total iteration 11
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -507,15 +221,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.37135900000067 seconds
+	 -- time elapsed for euler step : 41.95639540000002 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.922265299999708 seconds
+	 -- time elapsed for clustering : 0.7491154000000506 seconds
+ - Average distance : 116.84023192889802 +/- 60.91771222703488
 
  - 1 particles accepted
-	 - Distances : [28.66]
- - 29 / 300 particles found 
+	 - Distances : [45.46578033]
+ - 24 / 500 particles found 
 
-Actual number of particles 29
+Number of particles 24 - Total iteration 12
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -525,83 +240,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.38390670000081 seconds
+	 -- time elapsed for euler step : 41.92050300000005 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.884822099998928 seconds
-
- - 1 particles accepted
-	 - Distances : [28.05333333]
- - 30 / 300 particles found 
-
-Actual number of particles 30
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.15518320000047 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.869739700001446 seconds
-
- - 1 particles accepted
-	 - Distances : [28.54666667]
- - 31 / 300 particles found 
-
-Actual number of particles 31
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.73830570000064 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.877895699999499 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.7064008999987 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.887266899999304 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.18509719999929 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.894052399999055 seconds
+	 -- time elapsed for clustering : 0.7445969999999988 seconds
+ - Average distance : 118.97569819989468 +/- 61.5524333055194
 
  - 2 particles accepted
-	 - Distances : [28.98666667 22.38666667]
- - 33 / 300 particles found 
+	 - Distances : [44.32420007 45.01706509]
+ - 26 / 500 particles found 
 
-Actual number of particles 33
+Number of particles 26 - Total iteration 13
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -611,47 +259,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.26927000000069 seconds
+	 -- time elapsed for euler step : 41.882238200000074 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.8739422999988165 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.09587040000042 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.862665599999673 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.23803140000018 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.911121200000707 seconds
+	 -- time elapsed for clustering : 0.74421899999993 seconds
+ - Average distance : 118.37775978410667 +/- 60.9263864768413
 
  - 2 particles accepted
-	 - Distances : [25.32 22.68]
- - 35 / 300 particles found 
+	 - Distances : [43.5442058  44.16770235]
+ - 28 / 500 particles found 
 
-Actual number of particles 35
+Number of particles 28 - Total iteration 14
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -661,221 +278,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.18772209999952 seconds
+	 -- time elapsed for euler step : 41.87600269999996 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.840871499998684 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.48707149999973 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.957246299998587 seconds
-
- - 1 particles accepted
-	 - Distances : [27.54]
- - 36 / 300 particles found 
-
-Actual number of particles 36
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 72.26392879999912 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.9522422999998525 seconds
-
- - 1 particles accepted
-	 - Distances : [26.61333333]
- - 37 / 300 particles found 
-
-Actual number of particles 37
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.23005079999893 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.912064599999212 seconds
-
- - 2 particles accepted
-	 - Distances : [28.07333333 27.81333333]
- - 39 / 300 particles found 
-
-Actual number of particles 39
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.16366049999851 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.896669600000678 seconds
-
- - 1 particles accepted
-	 - Distances : [26.90666667]
- - 40 / 300 particles found 
-
-Actual number of particles 40
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.44145079999907 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.916115900001387 seconds
-
- - 1 particles accepted
-	 - Distances : [21.7]
- - 41 / 300 particles found 
-
-Actual number of particles 41
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.77460470000005 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.881184300000314 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.00800199999867 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.898886699998911 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.10586689999946 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.864829800000734 seconds
-
- - 2 particles accepted
-	 - Distances : [25.84666667 26.57333333]
- - 43 / 300 particles found 
-
-Actual number of particles 43
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.28459259999909 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.779871700000513 seconds
-
- - 1 particles accepted
-	 - Distances : [26.66666667]
- - 44 / 300 particles found 
-
-Actual number of particles 44
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19059509999897 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.841329099999712 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.21182249999947 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.815762500000346 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19711830000051 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.786001500000566 seconds
+	 -- time elapsed for clustering : 0.7459284999999909 seconds
+ - Average distance : 120.14468844356533 +/- 62.053309433721964
 
  - 3 particles accepted
-	 - Distances : [26.52666667 21.66666667 28.12666667]
- - 47 / 300 particles found 
+	 - Distances : [45.1807676  48.47028079 46.22376026]
+ - 31 / 500 particles found 
 
-Actual number of particles 47
+Number of particles 31 - Total iteration 15
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -885,31 +297,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19666069999948 seconds
+	 -- time elapsed for euler step : 41.885527199999956 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.823186699999496 seconds
+	 -- time elapsed for clustering : 0.7438812999999982 seconds
+ - Average distance : 119.69595855235868 +/- 61.71294729949378
 
- - 0 particles accepted
+ - 1 particles accepted
+	 - Distances : [46.52727627]
+ - 32 / 500 particles found 
 
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.20243029999983 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.80547309999929 seconds
-
- - 2 particles accepted
-	 - Distances : [28.99333333 27.70666667]
- - 49 / 300 particles found 
-
-Actual number of particles 49
+Number of particles 32 - Total iteration 16
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -919,15 +316,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.18678619999991 seconds
+	 -- time elapsed for euler step : 41.88897129999998 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.803763300000355 seconds
+	 -- time elapsed for clustering : 0.7526510000000144 seconds
+ - Average distance : 117.926133949032 +/- 60.83757539870823
 
  - 3 particles accepted
-	 - Distances : [26.34       23.2        27.67333333]
- - 52 / 300 particles found 
+	 - Distances : [48.04983883 45.04420106 47.0492737 ]
+ - 35 / 500 particles found 
 
-Actual number of particles 52
+Number of particles 35 - Total iteration 17
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -937,15 +335,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.20187699999951 seconds
+	 -- time elapsed for euler step : 41.884215100000006 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.905289899999843 seconds
+	 -- time elapsed for clustering : 0.7460446000000047 seconds
+ - Average distance : 117.32430420926667 +/- 61.03057019729453
 
- - 1 particles accepted
-	 - Distances : [24.36666667]
- - 53 / 300 particles found 
+ - 2 particles accepted
+	 - Distances : [44.88972651 48.46702046]
+ - 37 / 500 particles found 
 
-Actual number of particles 53
+Number of particles 37 - Total iteration 18
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -955,149 +354,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.1925867000009 seconds
+	 -- time elapsed for euler step : 41.90682860000004 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.843886800001201 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19672960000025 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.809155900000405 seconds
-
- - 1 particles accepted
-	 - Distances : [28.04]
- - 54 / 300 particles found 
-
-Actual number of particles 54
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19079659999989 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.819055500000104 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19384790000004 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.790029100000538 seconds
-
- - 1 particles accepted
-	 - Distances : [25.3]
- - 55 / 300 particles found 
-
-Actual number of particles 55
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19455890000063 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.884035200000653 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.22968749999927 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.867392200001632 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.20709609999903 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.829742899999474 seconds
-
- - 1 particles accepted
-	 - Distances : [21.29333333]
- - 56 / 300 particles found 
-
-Actual number of particles 56
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.21758360000058 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.818674699999974 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.18894589999945 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.7563286000004155 seconds
+	 -- time elapsed for clustering : 0.747692700000016 seconds
+ - Average distance : 118.53534112485934 +/- 61.445848871800806
 
  - 3 particles accepted
-	 - Distances : [26.36 25.08 27.78]
- - 59 / 300 particles found 
+	 - Distances : [46.11032874 48.3422774  47.68797368]
+ - 40 / 500 particles found 
 
-Actual number of particles 59
+Number of particles 40 - Total iteration 19
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -1107,15 +373,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19615840000006 seconds
+	 -- time elapsed for euler step : 41.921647699999994 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.877588600000308 seconds
+	 -- time elapsed for clustering : 0.7614962000000105 seconds
+ - Average distance : 114.12010409670602 +/- 60.5558143040716
 
- - 1 particles accepted
-	 - Distances : [25.05333333]
- - 60 / 300 particles found 
+ - 5 particles accepted
+	 - Distances : [48.52915424 46.68313872 45.58516004 46.70913122 45.52809413]
+ - 45 / 500 particles found 
 
-Actual number of particles 60
+Number of particles 45 - Total iteration 20
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -1125,15 +392,16 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.1972724999996 seconds
+	 -- time elapsed for euler step : 41.91463640000006 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.852305099999285 seconds
+	 -- time elapsed for clustering : 0.7524833999999601 seconds
+ - Average distance : 115.3136790817667 +/- 60.65235361721971
 
- - 1 particles accepted
-	 - Distances : [27.22666667]
- - 61 / 300 particles found 
+ - 4 particles accepted
+	 - Distances : [47.24130701 47.09950514 43.2782157  46.82448048]
+ - 49 / 500 particles found 
 
-Actual number of particles 61
+Number of particles 49 - Total iteration 21
 ________________________________________________________________ 
 
  - Sampling 1000 new particles
@@ -1143,116 +411,17 @@ ________________________________________________________________
  - Simulating the system :
 	 Loading and preparing simulation parameters
 	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.19207939999978 seconds
+	 -- time elapsed for euler step : 41.886784600000055 seconds
 	 Starting Clustering
-	 -- time elapsed for clustering : 6.842676199999914 seconds
+	 -- time elapsed for clustering : 0.772584199999983 seconds
+ - Average distance : 117.12842675001667 +/- 61.161045417349825
 
- - 0 particles accepted
+ - 4 particles accepted
+	 - Distances : [46.59455241 48.57477906 48.25261859 47.5252608 ]
+ - 53 / 500 particles found 
 
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.82784659999925 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.866277200000695 seconds
-
- - 2 particles accepted
-	 - Distances : [23.08       25.74666667]
- - 63 / 300 particles found 
-
-Actual number of particles 63
+Number of particles 53 - Total iteration 22
 ________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.9121498000004 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.824145999999018 seconds
-
- - 2 particles accepted
-	 - Distances : [27.34666667 28.30666667]
- - 65 / 300 particles found 
-
-Actual number of particles 65
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.87082080000073 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.9110135000009905 seconds
-
- - 1 particles accepted
-	 - Distances : [26.96666667]
- - 66 / 300 particles found 
-
-Actual number of particles 66
-________________________________________________________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 71.08079600000019 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.874003200000516 seconds
-
- - 0 particles accepted
-
-Iteration 2
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.93502500000068 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.862947300000087 seconds
-
- - 0 particles accepted
-
-Iteration 3
-__________________ 
-
- - Sampling 1000 new particles
-	____________________
-	####################
-
- - Simulating the system :
-	 Loading and preparing simulation parameters
-	 Starting stochastic euler evolution
-	 -- time elapsed for euler step : 70.97724729999936 seconds
-	 Starting Clustering
-	 -- time elapsed for clustering : 6.883095099999991 seconds
-
- - 0 particles accepted
-
-Iteration 4
-__________________ 
 
  - Sampling 1000 new particles
 	____________________

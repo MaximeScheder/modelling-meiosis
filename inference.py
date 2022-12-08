@@ -35,7 +35,7 @@ def multivariate_OLMC(particles, weights, index):
         Cov     : Tensor(d, d, N) of covariance matrix for each particle
     """
     
-    print("\t - Preparing the OLMC Kernel")
+    print("- Preparing the OLMC Kernel\n")
 
     dim = particles.shape[1]
     N = weights.shape[0]
@@ -49,7 +49,7 @@ def multivariate_OLMC(particles, weights, index):
         
     assert w.shape[0] > 0, "There should be particles that are below the current threshold"
     
-    for i in particles.shape[0]:
+    for i in range(particles.shape[0]):
         for k in range(w.shape[0]):
             vec = (p_select[k]-particles[i]).reshape(dim, -1)
             Cov[:,:,i] += w[k]*(vec @ vec.T)
@@ -79,7 +79,7 @@ def sample_candidate(epoch, weights, particles, Cov, prior):
         
     else:
         # draw a particle from the old set with its weights
-        index = np.random.multinomial(1, probs=weights)
+        index = np.random.multinomial(1, weights)
         index = np.where(index==1)
         theta = particles[index,:].squeeze()
         
@@ -131,7 +131,6 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
     # Initializing parameters
     p_out = np.zeros((N, p_in.shape[1]))
     w_out = np.ones(N)/N
-    theta = np.zeros((1, p_in.shape[1]))
     Cov = None
             
     # Compute the OLMC covariance if not first epoch
@@ -141,6 +140,7 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
     
     niter = 1
     i = 0
+    total_iter = 1
     while i < N:
                 
         if niter == maxiter: # stop simulation if stuck for too long
@@ -150,10 +150,10 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
         batch_prior_value = np.zeros((nbatch))
         
         if niter == 1:
-            print('Actual number of particles {}'.format(i))
+            print('Number of particles {} - Total iteration {}'.format(i, total_iter))
             print('________________________________________________________________ \n')
         else :
-            print('Iteration {}'.format(niter))
+            print('Number of iteration {} - Total iteration {}'.format(niter, total_iter))
             print('__________________ \n')
         
         # draw new particles
@@ -174,6 +174,8 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
         
         dist = distance_gpu(Y, X)
         
+        print(' - Average distance : {} +/- {}'.format(dist.mean(), dist.std()))
+        
         # select the parameters that are lower than the distance, if any
         batch_theta = batch_theta[dist <= eps]
         n_accepted_sample = batch_theta.shape[0]
@@ -191,23 +193,27 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
             
             if epoch != 0:
                 print(' - Computing new weights', flush=True)
-                start = time.perfcounter()
+                start = time.perf_counter()
                 
                 # computing the corresponding weights for the accepted samples
                 norm = np.sum(np.stack(
-                    [w*multivariate_normal.pdf(theta, p, c.squeeze()) for w, p, c in zip(w_in, p_in, np.moveaxis(Cov, 2, 0))]
+                    [w*multivariate_normal.pdf(batch_theta, p, c.squeeze()) for w, p, c in zip(w_in, p_in, np.moveaxis(Cov, 2, 0))]
                     ), axis=0)
+        
                 
                 end = time.perf_counter()
                 print('\t -- time elapsed for computation of weights : {:.2f} seconds'.format(end-start), flush=True)
                     
-            for k in range(n_accepted_sample):  
-                if epoch != 0:
-                    w_out[i] = batch_prior_value[k]/norm[k]
-                    
-                p_out[i,:] = batch_theta[k].reshape(-1)
-                d[i] = dist[k]
-                i += 1
+            for k in range(n_accepted_sample):
+                if i < N:
+                    if epoch != 0 and n_accepted_sample > 1:
+                        w_out[i] = batch_prior_value[k]/norm[k]
+                    elif epoch != 0:
+                        w_out[i] = batch_prior_value / norm
+                        
+                    p_out[i,:] = batch_theta[k].reshape(-1)
+                    d[i] = dist[k]
+                    i += 1
                 
             niter = 0
             
@@ -217,8 +223,11 @@ def ABC_SMC_step_gpu(eps, X, p_in, w_in, d, N, prior, nbatch, epoch=0, maxiter =
             print('')
             
         niter += 1
+        total_iter += 1
     
-    print('\n Epoch {} finisdhed'.format(epoch), flush=True)
+    print('\nEpoch {} finished'.format(epoch), flush=True)
+    
+    w_out = w_out/np.sum(w_out)
     
     return (p_out, w_out, d)
     

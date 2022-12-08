@@ -18,7 +18,7 @@ from scipy.stats import betaprime, norm, gamma, lognorm
 def making_fake_ground_truth():
     
     "Test on a simple cusp landscape with the different media"
-    true_parameter = torch.tensor(np.array([[-0.1, -0.4, 0, 0.8, -0.3, 0.3, 0.9, -0.1, 0.05, 0.01, -0.01, 0, 0.01]]))
+    true_parameter = torch.tensor(np.array([[-0.1, -0.4, 0, 0.8, -0.3, 0.3, 0.9, -0.1, 0.05, 0.01, -0.01, 0, 0.03]]))
     initializer()
     R = generate_fate_gpu(true_parameter)
     np.save('R.npy',R)
@@ -64,11 +64,17 @@ class prior():
     def sample(self, Nparam=1):
         b = norm.rvs(0, 0.8, size=4)
         a = norm.rvs(0, 0.8, size=4)
-        v = np.hstack((betaprime.rvs(1,10,size=1), np.random.normal(0, 0.5, 3)))
+        somme = -1
+        while somme < 0: # the velocity cannot be negative
+            v = np.hstack((betaprime.rvs(1,10,size=1), np.random.normal(0, 0.5, 3)))
+            somme = v[0] + v[v<0].sum()
         sigma = lognorm.rvs(1.5,loc=0.0001, scale=0.01, size=1)
         return np.hstack((b, a, v, sigma))
     
     def evaluate(self, param):
+        v = param[8:12]
+        if v[0] + v[v<0] < 0:
+            return 0
         pab = norm.pdf(param[0:8], 0, 0.8)
         pv0 = betaprime.pdf(param[8], 1, 10)
         pv = norm.pdf(param[9:12], 0, 0.5)
@@ -80,6 +86,8 @@ def fitting():
     Main function that call all necessary parts to perform inference.
     """
     
+    starting_epoch = 0
+    
     with open('consol_output.txt', 'w') as f:
         with redirect_stdout(f):
             print('STARTING SIMULATION \n')
@@ -88,8 +96,10 @@ def fitting():
             # Purely randomely, the error goes from 110 to 160
             # If only states to the first well, the error goes down 127
             max_iter = 1e4 # Maximum number of iteration on one epoch without saving any particle
-            epsilons = [29]
-            n_steps = 1
+            epsilons = [55]
+            #epsilons = [29, 24.1, 19.4, 15.18, 11, 8, 6.2, 4.7, 3.8, 3.1]
+            #epsilons = [29, 24.1, 19.4, 15.18, 11, 8, 6.2, 4.7, 3.8, 15]
+            n_steps = 15
             
             
             initializer()
@@ -102,11 +112,16 @@ def fitting():
             nbatch = simulation_param['nbatch']
             dim_param = simulation_param['dim_particles']
             
-            p_in = np.zeros((Nsamples, dim_param))
-            w_in = np.zeros((Nsamples))
-            d = np.zeros((Nsamples))
+            if starting_epoch == 0:
+                p_in = np.zeros((Nsamples, dim_param))
+                w_in = np.zeros((Nsamples))
+                d = np.zeros((Nsamples))
+            else:
+                p_in = np.load('./outputs/2022_11_29-particles-e8.npy')
+                w_in = np.load('./outputs/2022_11_29-weights-e8.npy')
+                d = np.load('./outputs/2022_11_29-distance-e8.npy')
             
-            for i in range(n_steps):
+            for i in range(starting_epoch, starting_epoch + n_steps):
                 
                 R = np.load('R.npy')
                 
@@ -114,16 +129,12 @@ def fitting():
                 print("Simulated cells  : {}".format(Ncells))
                 print("Total conditions : {}".format(Nconditions), flush=True)
                 
-                f.flush()
-                
-                time.sleep(0.001)
-                
                 start = time.perf_counter()
                 
                 (p_out, w_out, d_out) = inference.ABC_SMC_step_gpu(epsilons[i], R, p_in, w_in, d, Nsamples, prior_lscp, nbatch, i, max_iter)
                 
                 end = time.perf_counter()
-                print('Time elapsed for epoch {} : {} s \n'.format(i, end-start), flush=True)
+                print('-- time elapsed for epoch {} : {} s \n'.format(i, end-start), flush=True)
                 
                 print('|####################|')
                 print('| Processing Results |')
@@ -146,6 +157,7 @@ def fitting():
                 p_in = p_out
                 w_in = w_out
                 d = d_out
+                np.save('./outputs/{}epsilons-e{}.npy'.format(prefix, i), epsilons)
                 
 def distance_gpu(Rgpu, R):
     return np.sum(np.abs(Rgpu-R), axis=(1,2,3))
