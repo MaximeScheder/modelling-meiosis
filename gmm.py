@@ -16,7 +16,7 @@ class GaussianMixture(torch.nn.Module):
     probabilities are shaped (n, k, 1) if they relate to an individual sample,
     or (1, k, 1) if they assign membership probabilities to one of the mixture components.
     """
-    def __init__(self, n_components, n_features, covariance_type="full", eps=1e-6, init_params="kmeans", mu_init=None, var_init=None, r = None):
+    def __init__(self, n_components, n_features, covariance_type="full", eps=1e-6, init_params="kmeans", mu_init=None, var_init=None):
         """
         Initializes the model and brings all tensors into their required shape.
         The class expects data to be fed as a flat tensor in (n, d).
@@ -54,11 +54,6 @@ class GaussianMixture(torch.nn.Module):
 
         self.covariance_type = covariance_type
         self.init_params = init_params
-        
-        # For projection
-        self.ball = L2Ball()
-        self.r = r
-        
 
         assert self.covariance_type in ["full", "diag"]
         assert self.init_params in ["kmeans", "random"]
@@ -172,16 +167,11 @@ class GaussianMixture(torch.nn.Module):
             i += 1
             j = self.log_likelihood - log_likelihood_old
 
-            # Check that we are not too far from the centers
-            if self.r is not None:
-                too_far = torch.any(torch.linalg.norm(self.mu-self.mu_init) > self.r)
-            else:
-                too_far = False
                 
-            if j <= delta or too_far:
+            if j <= delta:
                 # When score decreases, revert to old parameters
                 self.__update_mu(mu_old)
-                #self.__update_var(var_old)
+                self.__update_var(var_old)
 
         self.params_fitted = True
 

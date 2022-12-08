@@ -12,9 +12,9 @@ import time
 import torch
 import pandas as pd
 from contextlib import redirect_stdout
-from scipy.stats import betaprime, norm, gamma, lognorm
+from scipy.stats import betaprime, norm, gamma, lognorm, uniform
 
-def log_min_max(c, delta = 1e-6):
+def log_min_max(c, delta = 0.000006):
     """
     Transformation of a value between 0 and 1 with a logarithmic scale. Used
     to rescale the concentration of nutrients to sognificant levels.
@@ -24,6 +24,9 @@ def log_min_max(c, delta = 1e-6):
         delta : value to enusre non zero concentration
     """
     return np.log((c+delta)/delta)/np.log((1+delta)/delta)
+
+def log_min_max_inv(c, delta = 0.000006):
+    return delta*(np.exp(c*np.log((1+delta)/delta))-1)
 
 
 
@@ -37,25 +40,25 @@ def initializer():
     
     AGN_matrix("./timed_counts.csv")
     AGN = np.load('AGN.npy')/100
-    
     delta = 0.000006
     AGN = np.log((AGN+delta)/delta)/np.log((1+delta)/delta)
     AGN = np.hstack((np.ones((AGN.shape[0], 1)), AGN))
     
     AGN = torch.tensor(AGN)
-    Nsamples = 300
+    Nsamples = 500
         
     Ncells = 300
     dt = 0.01
-    dim_param = 3 # without account of sigma
+    dim_param = 2 # without account of sigma
     Nstate = 2 # regular, MII
-    #time_point = np.array([11, 14, 17, 20, 23, 37, 111])
-    time_point = np.array([11, 14, 17, 20, 23, 37])
+    time_point = np.array([0.01, 11, 14, 17, 20, 23])#, 37, 111])
     step_sample = time_point/dt
     Nsteps = int(step_sample[-1])
     Nmeasure = len(time_point)
    # radius_tolerance = 0.2 # for the gmm cluster
     nbatch = 1000
+    
+    
 
     #-----------------------------------------------------------
     #------------------ MAP AND CONDITIONS ---------------------
@@ -64,6 +67,11 @@ def initializer():
     mapp = landscapes.cusp_full    
     dim_particles = dim_param*(AGN.shape[1]) + 1 # for each landscape param, there 3 Nutrient and 1 
     Nconditions = AGN.shape[0]
+    N_prediction = Nmeasure*Nconditions
+    
+    # In the future, will perform inference on part of the data to see if we can catch the underlying truth
+    
+    # HERE DO STUFF TO SPARSE THE DATA
     
     #-----------------------------------------------------------
     #---------------------- CLUSTERING -------------------------
@@ -112,9 +120,9 @@ def R_from_data(data):
     print('| Ground Truth |')
     print('|##############|')
     
-    print('\n -Conditions are : \n\t{}'.format(conditions))
+    print('\n -Conditions are : \n{}'.format(conditions))
     print(' -Time points are : \n\t{}'.format(time))
-    print(' -Number of states : {}'.format(N_states))
+    print(' -Number of states : {}\n'.format(N_states), flush=True)
     
     for i, t in enumerate(time):
         for j, cond in enumerate(conditions):
@@ -125,25 +133,29 @@ def R_from_data(data):
                         
             R[j,:,i] = np.hstack([NS.reshape(-1), MII.reshape(-1)])
     
-    return R            
+    return R[np.newaxis,:,:,:]   
+
+
+
 
 
 def fitting(data_file):
     """
-    Main function that call all necessary parts to perform inference of the landscape
+    Main function that call all necessary parts to perform inference.
     """
+    
+    starting_epoch = 0
     
     with open('consol_output.txt', 'w') as f:
         with redirect_stdout(f):
             print('STARTING SIMULATION \n')
             # Simulation parameters
             
-            # Purely randomely, the error goes from 110 to 160
-            # If only states to the first well, the error goes down 127
+
             max_iter = 1e4 # Maximum number of iteration on one epoch without saving any particle
-            epsilons = [29]
-            n_steps = 1
-            
+            epsilons = [49]
+            n_steps = 15
+            R = R_from_data(pd.read_csv(data_file))
             
             initializer()
             simulation_param = np.load("./dict_data.npy", allow_pickle=True).item()
@@ -155,24 +167,29 @@ def fitting(data_file):
             nbatch = simulation_param['nbatch']
             dim_param = simulation_param['dim_particles']
             
-            p_in = np.zeros((Nsamples, dim_param))
-            w_in = np.zeros((Nsamples))
-            d = np.zeros((Nsamples))
+            if starting_epoch == 0:
+                p_in = np.zeros((Nsamples, dim_param))
+                w_in = np.zeros((Nsamples))
+                d = np.zeros((Nsamples))
+            else:
+                p_in = np.load('./outputs/2022_11_29-particles-e8.npy')
+                w_in = np.load('./outputs/2022_11_29-weights-e8.npy')
+                d = np.load('./outputs/2022_11_29-distance-e8.npy')
             
-            for i in range(n_steps):
+            for i in range(starting_epoch, starting_epoch + n_steps):
                 
-                R = np.load('R.npy')
+
                 
                 print("Total samples    : {}".format(Nsamples))
                 print("Simulated cells  : {}".format(Ncells))
                 print("Total conditions : {}".format(Nconditions), flush=True)
-                                                
+                
                 start = time.perf_counter()
                 
                 (p_out, w_out, d_out) = inference.ABC_SMC_step_gpu(epsilons[i], R, p_in, w_in, d, Nsamples, prior_lscp, nbatch, i, max_iter)
                 
                 end = time.perf_counter()
-                print('Time elapsed for epoch {} : {} s \n'.format(i, end-start), flush=True)
+                print('-- time elapsed for epoch {} : {} s \n'.format(i, end-start), flush=True)
                 
                 print('|####################|')
                 print('| Processing Results |')
@@ -186,8 +203,8 @@ def fitting(data_file):
                 np.save('./outputs/{}distance-e{}.npy'.format(prefix, i), d_out)
                 
                 print("Proposition of threshold based on distances distribution")
-                print("\t With 0.15 quantile : {:.5f} \n".format(np.quantile(d_out, 0.15)))
-                a = np.quantile(d_out, 0.15)
+                print("\t With 0.1 quantile : {:.5f} \n".format(np.quantile(d_out, 0.15)))
+                a = np.quantile(d_out, 0.1)
                 epsilons.append(a)
                 print('The threshold list is now :')
                 print('\t {}'.format(epsilons), flush=True)
@@ -195,6 +212,7 @@ def fitting(data_file):
                 p_in = p_out
                 w_in = w_out
                 d = d_out
+                np.save('./outputs/{}epsilons-e{}.npy'.format(prefix, i), epsilons)
         
 
 # -----------------------------------------------------------------------------
@@ -208,18 +226,25 @@ class prior():
         
     
     def sample(self, Nparam=1):
-        b = norm.rvs(0, 0.8, size=4)
-        a = norm.rvs(0, 0.8, size=4)
-        v = np.hstack((betaprime.rvs(1,10,size=1), np.random.normal(0, 0.5, 3)))
-        sigma = lognorm.rvs(1.5,loc=0.0001, scale=0.01, size=1)
-        return np.hstack((b, a, v, sigma))
+        b = uniform.rvs(-1.5, 3, size=4)
+        #a = uniform.rvs(-1.5, 3, size=4)
+        somme = -1
+        while somme < 0: # the velocity cannot be negative
+            v = np.hstack((uniform.rvs(0, 2, size=1), uniform.rvs(-1.5, 3, size=3)))
+            somme = v[0] + v[v<0].sum()
+        sigma = uniform.rvs(0, 0.2, size=1)
+        return np.hstack((b, v, sigma))
     
     def evaluate(self, param):
-        pab = norm.pdf(param[0:8], 0, 0.8)
-        pv0 = betaprime.pdf(param[8], 1, 10)
-        pv = norm.pdf(param[9:12], 0, 0.5)
-        ps = lognorm.pdf(param[-1], 1.5, loc=0.0001, scale=0.01)
-        return np.prod(np.hstack((pab, pv0, pv, ps)))
+        v = param[8:12]
+        if v[0] + v[v<0].sum() < 0:
+            return 0
+        pab = uniform.pdf(param[0:4], -1.5, 3)
+        pv0 = uniform.pdf(param[4], 0, 2)
+        pv = uniform.pdf(param[5:8], -1.5, 3)
+        ps = uniform.pdf(param[-1], 0, 0.2)
+        return np.prod(np.hstack((pab, pv0, pv, ps)))        
+
 
 if __name__ == '__main__':
-    fitting()
+    fitting('timed_counts_reduced.csv')

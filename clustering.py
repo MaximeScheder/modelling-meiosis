@@ -128,7 +128,7 @@ def KMeans(x, centers):
 
     return cl
 
-def KMeans_Clustering(x, centers, Niter=10, radius = 0.4):
+def KMeans_Clustering(x, centers, Niter=1, radius = 0.001):
     """Implements Lloyd's algorithm for the Euclidean metric."""
     
 

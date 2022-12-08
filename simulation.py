@@ -91,6 +91,8 @@ def generate_fate_gpu(parameters):
     print("\t Starting Clustering", flush=True)
     start = time.perf_counter()
     
+    # /!\ This part is actually crucial ! Clustering all the conditions together leads to false results since it biases
+    # The condition. Needs to be adressed at some point later !!
     assignement = KMeans_Clustering(X, centers)
     assignement = assignement.reshape(nbatch, Nconditions, Ncells, Nmeasure)
     assignement = assignement.cpu()
@@ -131,7 +133,6 @@ def euler_gpu(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions, nbatch):
         Xem: (nbatch, Nconditions, Ncells, 2, len(steps)) array of time evolution
     """
     
-    
     Ncells = X0.shape[1]
     dim_param = parameters.shape[-1]
     
@@ -170,14 +171,13 @@ def euler_gpu(X0, sigma, F, parameters, dt, Nsteps, steps, Nconditions, nbatch):
     
     # allign parameters for direct computation of all conditions in one go
     p = p.reshape((nbatch, Ncells*Nconditions, dim_param)) 
-    
         
     k = 1
     for i in range(Nsteps):
         Field = F(Xtemp[:,:,0,0], Xtemp[:,:,0,1], p).transpose(1,2)
         Xtemp[:,:,1,:] = Xtemp[:,:,0,:] + dt * Field + torch.sqrt(dt)*sigma*(dW.rsample((nbatch, Ncells*Nconditions, 2))).squeeze(-1)
         Xtemp[:,:,0,:] = Xtemp[:,:,1,:]
-        
+       
         #list of steps at which to save the results 
         if i+1 in steps:
             Xem[:,:,:,k-1,:] = Xtemp[:,:,1,:].reshape(nbatch, Nconditions, Ncells, 2).cpu()

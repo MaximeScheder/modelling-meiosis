@@ -40,7 +40,7 @@ def binaryFlip_F(a, b, x, y):
 # This is the format to be used for landscape format
 def cusp(x, y, parameter):
     p = parameter    
-    return -torch.stack([4*x**3 - 2*x/2*p[:,:,1] + p[:,:,0], y], dim=1)
+    return -torch.stack([4*x**3 - 2*x/2 + p[:,:,0], y], dim=1)
 
 def cuspy(x, y, p):
     if p.ndim == 1:
@@ -62,7 +62,7 @@ def cusp_full(x, y, p):
     " p : velocity, a, b"
     if p.ndim == 1:
         p = p.reshape(1, -1)
-    return p[:,:,2][:,np.newaxis,:]*cusp(x, y, p[:,:,0:2])
+    return p[:,:,1][:,np.newaxis,:]*cusp(x, y, p[:,:,0:1])
 
 def fate_seperate(x, y, p):
     if p.ndim == 1:
@@ -123,17 +123,18 @@ def field_yeast_fate(x, y, p):
 
 #--------- UTULITARY
     
-def plotLandscape(x, y, mapp, parameters, normMax = 8, pot = None):
+def plotLandscape(x, y, mapp, parameters, normMax = 8, pot = None, ax_2d = None):
     
     vec = mapp(x, y, parameters)
 
-    vx = vec[0].squeeze()
-    vy= vec[1].squeeze()
+    vx = vec[:,0,:].squeeze()
+    vy= vec[:,1,:].squeeze()
     color = torch.abs(vx)+torch.abs(vy)
     mask = torch.where(color < normMax)
     
-    fig_2d = plt.figure(figsize =(28, 28))
-    ax_2d = plt.axes()
+    if ax_2d == None:
+        fig_2d = plt.figure(figsize =(28, 28))
+        ax_2d = plt.axes()
     
     if pot is not None:
         xx = torch.full(x.shape, torch.nan)
@@ -149,6 +150,8 @@ def plotLandscape(x, y, mapp, parameters, normMax = 8, pot = None):
     
 
     
-    
-    return fig_2d, ax_2d
+    if ax_2d == None:
+        return fig_2d, ax_2d
+    else:
+        return ax_2d
     
