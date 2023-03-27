@@ -1,4 +1,0 @@
-800 particles
-cusp landscape with b,a ,v,sigma as parameters
-0.01 dt
-all steps (0, 111)
