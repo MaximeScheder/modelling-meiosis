@@ -1,15 +1,77 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Jan 14 09:31:22 2022
+Created on Tue Nov 29 07:56:03 2022
 
-@author: msche
+@author: scheder
 """
-import matplotlib.pyplot as plt
-import torch
 import numpy as np
-import pandas as pd
+import matplotlib.pyplot as plt
 import seaborn as sns
-from landscape_inf import Create_R, initializer, generate_CPU
+import pandas as pd
+from simulation import fitpam_to_landscape, generate_fate_gpu
+from sklearn.mixture import GaussianMixture
+from landscape_inf import initializer
+from landscape_inf import log_min_max_inv
+from landscape_inf import R_from_data
+from landscapes import cusp_full, plotLandscape
+from matplotlib.animation import FuncAnimation
+import matplotlib.animation as animation
+import torch
+from simulation import euler_gpu
+
+
+def plot_hist(particles, var_name):
+    pass
+
+def find_optimal_param(parameters, var_name, d=None):
+    
+    gm = GaussianMixture().fit(parameters)
+    print(gm.means_)
+    print(gm.weights_)
+            
+    return gm.means_[np.newaxis,:]
+
+def compare_param(particle1, particle2):
+    
+    simulation_param = np.load("./dict_data.npy", allow_pickle=True).item()
+    AGN = simulation_param['AGN']
+    dim_param = simulation_param['dim_param']
+    
+    p_1, s_1 = fitpam_to_landscape(particle1, AGN, dim_param)
+    p_2, s_2 = fitpam_to_landscape(particle2, AGN, dim_param)
+    
+    for c in range(AGN.shape[0]):
+        print('Condition {}'.format(c))
+        print('\tp1 : {}'.format(p_1[c].numpy()))
+        print('\tp2 : {}'.format(p_2[c].numpy()))
+    
+    print('Difference : {}'.format(np.linalg.norm(p_1-p_2)))
+    print('sigma 1 : {}'.format(s_1))
+    print('sigma 2 : {}'.format(s_2))
+    
+def param_to_landscape_form(param):
+    simulation_param = np.load("./dict_data.npy", allow_pickle=True).item()
+    AGN = simulation_param['AGN']
+    dim_param = simulation_param['dim_param']
+    
+    p, s = fitpam_to_landscape(param, AGN, dim_param)
+    
+    for c in range(AGN.shape[0]):
+        print('Condition {}'.format(c))
+        print('\t {}'.format(p[c].numpy()))
+        
+    print('sigma : {}'.format(s))
+    
+def simulate_landscape(param, R_exp = None):
+    
+    R = generate_fate_gpu(param)
+    
+    if type(R_exp) is np.ndarray:
+        print(distance_gpu(R, R_exp))
+    return R
+    
+def distance_gpu(Rgpu, R):
+    return np.sum(np.abs(Rgpu-R), axis=(1,2,3))
 
 from math import log10 , floor
 def round_it(x, sig):
@@ -17,205 +79,188 @@ def round_it(x, sig):
         return 0
     else:
         return round(x, sig-int(floor(log10(abs(x))))-1)
-#%%
 
-p_last = torch.load("./outputs/particles-e6")
-p_before = torch.load("./outputs/particles-e5")
-p_init = torch.load("./outputs/particles-e0")
-p_last = p_last.numpy()
-p_before = p_before.numpy()
-p_init = p_init.numpy()
-var_name = ["g_1_0", "g_1_g", "g_1_n",
-            "g_2_0", "g_2_g", "g_2_n",
-            "v_1_0", "v_1_g", "v_1_n",
-            "v_2_0", "v_2_g", "v_2_n",
-            "sigma"]
-
-parts1 = pd.DataFrame(p_last, columns=var_name)
-
-epoch = np.ones(240, dtype=int)
-parts1["epoch"] = epoch*6
-
-parts2 = pd.DataFrame(p_before, columns=var_name)
-
-parts2["epoch"] = epoch*5
-
-parts3 = pd.DataFrame(p_init, columns=var_name)
-parts3["epoch"] = epoch*0
-
-
-parts_67 = pd.concat([parts1, parts2], ignore_index=True)
-parts_07 = pd.concat([parts1, parts3], ignore_index=True)
-
-#%% only last epoch
-
-sns.pairplot(parts1, vars=var_name)
-#%%last and before
-sns.pairplot(parts_67, vars=var_name, hue="epoch")
-
-#%%
-sns.pairplot(parts_07, vars=var_name, hue="epoch")
-
-#%%
-opt_param = np.zeros((13))
-std_param = np.zeros((13))
-
-for i, name in enumerate(var_name):
-    hist = np.histogram(p_last[:,i])
-    p = hist[1][np.argmax(hist[0])]
-    std = np.std(p_last[:,i])
-    opt_param[i] = p
-    std_param[i] = std
-    print(name + " : {:.3f} +/- {:.3f}".format(p, std))
-
+def plot_predicitons(R_sim, R_gt):
     
-torch.save(opt_param, "./outputs/opti_param")
-torch.save(std_param, "./outputs/opti_param_std")
-
-#%% Testing the fit
-data = pd.read_excel("./results.xlsx")
-# Transforming data for logscale case
-# sub_data = data.drop([9, 11, 20, 16, 15])
-# AGN_i = torch.from_numpy(np.hstack([np.ones((sub_data["Acetate"].shape[0], 1)), sub_data[["Acetate", "Glucose" ,"Nitrogen"]].values])).float()
-# AGN_i = AGN_i * torch.Tensor([1, 1, 2, 5])
-# w = torch.where(AGN_i[:,1:] > 0)
-# min_val = torch.min(torch.log(AGN_i[:,1:][w]/100))
-
-
-
-# #Loading all data and transform data to suit the simu
-# AGN = torch.from_numpy(np.hstack([np.ones((data["Acetate"].shape[0], 1)), data[["Acetate", "Glucose" ,"Nitrogen"]].values])).float()
-# AGN = AGN * torch.Tensor([1, 1, 2, 5])
-# w = torch.where(AGN[:,1:] > 0)
-# AGN[:,1:][w] = torch.log(AGN[:,1:][w]/100)/min_val
-
-# data = pd.read_excel("./results.xlsx")
-# data = data.drop([9, 11, 20, 16, 15])
-# AGN = torch.from_numpy(np.hstack([np.ones((data["Acetate"].shape[0], 1)), data[["Acetate", "Glucose" ,"Nitrogen"]].values])).float()
-# AGN = AGN * torch.Tensor([1, 1, 2, 5])
-# w = torch.where(AGN[:,1:] > 0)
-# AGN[:,1:][w] = torch.log(AGN[:,1:][w]/100)/torch.min(torch.log(AGN[:,1:][w]/100))
-
-data = data.drop([0, 1, 2, 3, 8, 10, 11, 12, 20, 15, 17, 18, 21, 23, 24, 25])
-AGN = torch.from_numpy(np.hstack([np.ones((data["Acetate"].shape[0], 1)), data[["Acetate", "Glucose" ,"Nitrogen"]].values])).float()
-AGN = AGN * torch.Tensor([1, 1, 2, 5])
-AGN = AGN[:,1:]
-
-# True proportions
-G1 = data["C1"]/(data["C1"]+data["C2"]+data["C3"])
-MI = data["C3"]/(data["C1"]+data["C2"]+data["C3"])
-MII = data["C2"]/(data["C1"]+data["C2"]+data["C3"])
-
-R = torch.zeros((AGN.shape[0], 3,1))
-
-R[:,0,:] = torch.from_numpy(G1.values.reshape(-1, 1))
-R[:,1,:] = torch.from_numpy(MI.values.reshape(-1, 1))
-R[:,2,:] = torch.from_numpy(MII.values.reshape(-1, 1))
-
-
-
-
-
-param = torch.load("./outputs/opti_param")
-sim_param = initializer()
-
-#%%
-#X0 = torch.ones((AGN.shape[0],sim_param["Ncells"], 2)) * torch.Tensor([[-1.4, 0]]) 
-R_sim = generate_CPU(1, param, sim_param)
-
-
-#%%
-plt.style.use("seaborn")
-col = sns.color_palette()
-f = plt.figure(figsize=(30,30))
-state = ["G", "MG", "MII"]
-unseen = [4, 7]
-
-R_sim = R_saved/100
-
-for i in range(AGN.shape[0]):
-    ax = plt.subplot(3, 4, i+1)
+    R_sim = R_sim.squeeze()
+    R_gt = R_gt.squeeze()
+    simulation_param = np.load('dict_data.npy', allow_pickle=True).item()
+    AGN = simulation_param['AGN'].numpy()
+    Nstate = simulation_param['Nstate']
+    time_steps = simulation_param['steps']*simulation_param['dt']
     
-    if i in unseen:
-       ax.set_facecolor(col[-2])
-    for k in range(3):
-        ground = [0, 0]
-        d = 0.05
-        
-        
-        p_e = R[i, k, 0].item()
-        p_s = (R_sim[i, k, 0].item())
-        if k > 0:
-            ground[0] = torch.sum(R[i,0:k,0])
-            ground[1] = torch.sum(R_sim[i,0:k,0])
-        plt.xticks(fontsize=20)
-        plt.yticks(fontsize=20)
-        plt.title("({},{},{})".format(round_it(AGN[i,1-1].item(), 1), 
-                                                  round_it(AGN[i,2-1].item(), 1),
-                                                  round_it(AGN[i,3-1].item(), 1)),
-                  fontsize=20)
+    plt.style.use("seaborn")
+    col = sns.color_palette()
+    state = ["UNSPO", "SPO"]
+    
+    for t, time in enumerate(time_steps):
+        fig = plt.figure(figsize=(30,30))
+        fig.suptitle('{} hours in media'.format(time), fontsize=40)
+        for i in range(AGN.shape[0]):
+            ax = plt.subplot(5, 5, i+1)
             
-        bar = plt.bar("Exp", p_e, color=col[k], bottom=ground[0], label=state[k])
-        if p_e > d:
-           plt.text(bar[0].get_x() + bar[0].get_width()/2., ground[0]+p_e/2-0.02, str("{:.2f}".format(p_e)) , fontdict=dict(fontsize=20), color="white", fontweight="bold", ha="center")
+            # if i in unseen:
+            #    ax.set_facecolor(col[-2])
+            for k in range(Nstate):
+                ground = [0, 0]
+                d = 0.05
+                
+                
+                p_e = R_gt[i, k, t]
+                p_s = R_sim[i, k, t]
+                if k > 0:
+                    ground[0] = np.sum(R_gt[i,0:k,t])
+                    ground[1] = np.sum(R_sim[i,0:k,t])
+                plt.xticks(fontsize=20)
+                plt.yticks(fontsize=20)
+                plt.title("({},{},{})".format(round_it(log_min_max_inv(AGN[i,1])*100, 1), 
+                                                          round_it(log_min_max_inv(AGN[i,2])*100, 1),
+                                                          round_it(log_min_max_inv(AGN[i,3])*100, 1)),
+                          fontsize=20)
+                    
+                bar = plt.bar("Exp", p_e, color=col[k], bottom=ground[0], label=state[k])
+                if p_e > d:
+                   plt.text(bar[0].get_x() + bar[0].get_width()/2., ground[0]+p_e/2-0.02, str("{:.2f}".format(p_e)) , fontdict=dict(fontsize=20), color="white", fontweight="bold", ha="center")
+                
+                bar = plt.bar("Sim", p_s,  color=col[k], bottom=ground[1])
+                if p_s > d:
+                    plt.text(bar[0].get_x() + bar[0].get_width()/2., ground[1]+p_s/2-0.02, str("{:.2f}".format(p_s)) , fontdict=dict(fontsize=20), color="white", fontweight="bold", ha="center")
+                    
+    
+        plt.subplot(5, 5,i+1)
+        plt.legend(bbox_to_anchor = [2, 1], fontsize=30)
+        plt.text(2, 0.45, "(Ac,Gl,Ni) in [%]", fontsize=30)
         
-        bar = plt.bar("Sim", p_s,  color=col[k], bottom=ground[1])
-        if p_s > d:
-            plt.text(bar[0].get_x() + bar[0].get_width()/2., ground[1]+p_s/2-0.02, str("{:.2f}".format(p_s)) , fontdict=dict(fontsize=20), color="white", fontweight="bold", ha="center")
-            
-
-plt.subplot(3, 4,i+1)
-plt.legend(bbox_to_anchor = [2, 1], fontsize=30)
-plt.text(2, 0.45, "(Ac,Gl,Ni) in [%]", fontsize=30)
-
-plt.savefig("./fig/comparison.png", dpi=200)
-
-#%%
-d = 6
-R_saved = R_sim * 0
-for i in range(100):
     
-    R_sim = generate_CPU(240, opt_param, sim_param)
-    dist = torch.sum(torch.abs(R-R_sim))
-    if dist < d:
-        R_saved += R_sim
-    print(i, torch.sum(torch.abs(R-R_sim)))
+        plt.savefig("./figures/comparison_t{}.png".format(t), dpi=200)
+        plt.clf()
+        
+
+    
+def movie_landscape(condition):
+
+    simulation_param = np.load("./dict_data.npy", allow_pickle=True).item()
+    AGN = simulation_param['AGN'].numpy()     # Concentration matrix for each nutrient
+    C = log_min_max_inv(AGN)*100
+    C = np.around(C[condition], 3)
+    HML = []
+    for i in range(1,4):
+        if C[i] in [1, 0.5]:
+            HML.append('H')
+        elif C[i] in [0.1, 0.005]:
+            HML.append('L')
+        elif C[i] in [0.05]:    
+            HML.append('M')
+        else:
+            HML.append('_')
+    
+    fig, ax = plt.subplots(1, 1, figsize=(20,20))
+    
+    x1, x2 = -0.75, 0.75
+    y1, y2 = -0.75, 0.75
+    x, y = torch.meshgrid(torch.linspace(x1, x2, 100), torch.linspace(y1, y2, 100)) 
+    
+    p = torch.tensor(np.load('p_movie.npy'))
+    X = np.load('X_movie.npy')
+    
+    n_frame = X.shape[-2]
+
+
+    def animationFunction(frame):
+        ax.cla()
+        ax.set_ylim(-0.75, 0.75)
+        ax.set_xlim(-0.75, 0.75)
+        plotLandscape(x, y, cusp_full, p[0,condition].reshape((1,1,-1)), normMax=0.4, ax_2d=ax)
+        ax.set_xlabel("x", size=30)
+        ax.set_ylabel("y", size=30)
+        ax.annotate("Unspo", (-0.3, 0.2),size=50)
+        ax.annotate("Spo", (0.2, 0.2),size=50)
+        ax.tick_params(axis='both', which='major', labelsize=30)
+        
+        
+        ax.scatter(X[0,condition,:,frame,0], X[0,condition,:,frame,1])
+        
+        ax.set_title("Time {}h \n Ac: {} - Gl: {} - Ni: {}".format(frame*2, HML[0], HML[1], HML[2]), fontsize=30)
+        
+        
+    anim = FuncAnimation(fig, animationFunction, n_frame)
+    writervideo = animation.writers["ffmpeg"]
+    writervideo = writervideo(fps=10)
+    anim.save('./figures/movies/landscape_AGN-{}{}{}.mp4'.format(HML[0],HML[1],HML[2]), writer=writervideo)
+        
+
+def X_movie(nbr_frame, parameter):
+    
+    simulation_param = np.load("./dict_data.npy", allow_pickle=True).item()
+    AGN = simulation_param['AGN']       # Concentration matrix for each nutrient
+    X0 = simulation_param['X0']         # Initial condition for the cells (Euler)
+    F_lscpe = simulation_param['mapp']  # Landscape
+    dt = simulation_param['dt']         # Time step for the simulation
+    Nsteps = simulation_param['Nsteps'] # Total iteration in Euler
+    dim_param = simulation_param['dim_param']   # Dimension of the landscape parameter (!= particle dimension)
+    Nconditions = AGN.shape[0]          # Number of nutrient conditions
+    
+    steps = np.linspace(0, Nsteps, nbr_frame, dtype=int)
     
     
-#%%
-x = np.array([0.005, 0.05, 0.5])
-y = np.array([0.3449, 0.1936,0])
-plt.style.use("seaborn")
-l = np.linspace(0.005, 0.55, 100)
-f = lambda x: 0.3678*np.exp(-12.83*x)
+    
+    nbatch = parameter.shape[0]
+    
+    # Transform each batch particle into a compatible form with the landscape
+    lands_param = torch.zeros((nbatch, Nconditions, dim_param))
+    sigmas = np.zeros(nbatch)
+    
+    for i in range(nbatch):
+        lands_param[i,:,:], sigmas[i] = fitpam_to_landscape(parameter[i], AGN, dim_param)
+    
+    
+    X = euler_gpu(X0, sigmas, F_lscpe, lands_param, dt, Nsteps, steps, Nconditions, nbatch)
+    np.save('X_movie.npy', X)
+    np.save('p_movie.npy', lands_param)
+    
+    
+if __name__ == '__main__':
+    
+    d_last = np.load('./outputs/2022_12_5-distance-e12.npy')
+    p_last = np.load('./outputs/2022_12_5-particles-e12.npy')
+    d_init = np.load('./outputs/2022_12_2-distance-e0.npy')
+    p_init = np.load('./outputs/2022_12_2-particles-e0.npy')
+    p_mid = np.load('./outputs/2022_12_3-particles-e6.npy')
 
-plt.plot(x, y, 'o', label="Data points")
-plt.plot(l, f(l), '--', label="fit : 0.37 exp(-12.83x)")
-plt.xlabel("nutrient concentration [%]", fontsize=20)
-plt.ylabel("MII proportion", fontsize=20)
-plt.legend(fontsize=20)
-plt.xticks(fontsize=20)
-plt.yticks(fontsize=20)
+    var_name = ["b_0", 'b_a', "b_g", "b_n", 
+                "a_0", 'a_a', "a_g", "a_n",
+                "v_0", 'v_a', "v_g", "v_n",
+                "sigma"]
 
-#%%
+    epoch = np.ones(800, dtype=int)
 
-n = np.linspace(0.005, 0.5, 100)
-f = lambda x: (0.486-np.sqrt(8/27)+0.813*n)/1.245
-err = lambda x: 0.02/1.245 + np.abs((0.486-np.sqrt(8/27)+0.813*x)/1.245**2*0.8) + 0.6/1.245*x
-g = f(n)
-plt.plot(n[g > 0], g[g>0], '-k', label="bifurcation of G state")
-e = err(n)
-plt.fill_between(n[g>0], g[g>0], g[g>0]+e[g>0], alpha = 0.5, color="c", label="uncertainty")
-ids = g-e < 0
-e[ids] = 0
-plt.fill_between(n[g>0], g[g>0], -e[g>0], alpha = 0.5, color="c")
-plt.xlabel("Nitrogen [%]", fontsize=24)
-plt.ylabel("Glucose [%]",fontsize=24)
-plt.legend(fontsize=24)
-plt.xticks(fontsize=24)
-plt.yticks(fontsize=24)
-plt.title("Bifurcation of state G", fontsize=24)
-plt.savefig("./fig/bifurcation.png", dpi=200)
+    data =  pd.DataFrame(p_last, columns=var_name)
+    data['epoch'] = epoch*12
 
+    data_0 =  pd.DataFrame(p_init, columns=var_name)
+    data_0['epoch'] = epoch*0
 
+    data_mid =  pd.DataFrame(p_mid, columns=var_name)
+    data_mid['epoch'] = epoch*6
 
+    data_08 = pd.concat([data_0, data_mid, data], ignore_index=True)
+    
+    # sns.pairplot(data_08, vars=var_name, hue="epoch")
+    # sns.pairplot(data, vars=var_name)
+    p_opt = find_optimal_param(p_last, var_name)
+    p_opt=p_opt.reshape((1,13))
+    
+    # Ploting R matrix
+    
+    # R = R_from_data(pd.read_csv('timed_counts.csv'))
+    
+    # param_to_landscape_form(p_opt)
+    # R_sim = simulate_landscape(p_opt, R)
+    
+    # plot_predicitons(R_sim, R)
+    
+    # MOVIE LANDSCAPE
+    #X_movie(55, p_opt)
+    for i in range(24):
+        print('Starting movie {}'.format(i))
+        movie_landscape(i)
