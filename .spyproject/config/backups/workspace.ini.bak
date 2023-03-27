@@ -4,7 +4,7 @@ save_data_on_exit = True
 save_history = True
 save_non_project_files = False
 project_type = 'empty-project-type'
-recent_files = ['landscapes.py', 'clustering.py', 'Data_ploting.py', 'simulation.py', 'inference.py', 'landscape_inf.py', 'tests.py', 'benchmark_steps.py']
+recent_files = ['..\\..\\NeuralNetwork\\model\\plotresults-nn.py', '..\\..\\Yeast\\Experiments\\Nutrient-dependance\\experimental\\Pictures\\data_analysis.py', '..\\..\\NeuralNetwork\\model\\run_predict_folder.py', '..\\..\\NeuralNetwork\\model\\rescaling_63x.py', '..\\..\\NeuralNetwork\\model\\rename_file.py', '..\\..\\NeuralNetwork\\model\\process_for_training.py', '..\\..\\NeuralNetwork\\model\\data_processing_efficient.py', '..\\..\\NeuralNetwork\\model\\run_train.py']
 
 [main]
 version = 0.2.0
